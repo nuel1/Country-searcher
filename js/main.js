@@ -15,9 +15,10 @@ const ul_dropdown = document.querySelector(".drop-down-list");
 const back_navigator = document.querySelector(".navigator--btn");
 const a_tagContainer = document.querySelector(".tag-container");
 
-// Reverting back to previously opened pages:
-// First we initialise an object varible type
-// that keeps record of those pages visited...
+/**
+ * Reverting back to previously opened pages: First we initialise an object varible type
+    that keeps record of those pages visited...
+**/
 const history = [];
 
 // Search box expand & shrink animation

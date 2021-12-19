@@ -16,76 +16,69 @@ const loadingStates = {
 };
 const observerState = { observe: true };
 
-function loadDocument() {
-  // Run the page loader
-  runPreloader();
-  // Reveal the header when loader is half complete
-  loadPage(1);
-
-  // reset observerState.observer to true if false
-  if (!observerState.observe) observerState.observe = true;
-
-  // Load the data to home page when page load is complete
-  dataIsLoaded(DATA, loadOnScroll);
-}
-
-(function () {
-  const i = setInterval(function () {
-    // Check if data is cached and load the data to the page
-    if (DATA) {
-      clearInterval(i);
-      loadDocument();
-    }
-  }, 0);
-})();
-
 function loadPage(n) {
-  const i = setInterval(function () {
-    if (loadingStates.pageIsLoaded) {
-      clearInterval(i);
-      viewPage();
-    }
-  }, 0);
+  function pageProgress() {
+    const i = setInterval(function () {
+      if (loadingStates.pageIsLoaded) {
+        clearInterval(i);
+        viewPage();
+      }
+    }, 0);
 
-  const j = setInterval(function () {
-    if (loadingStates.contentIsLoading) {
-      clearInterval(j);
-      dataPreloader();
-    }
-  }, 0);
+    const j = setInterval(function () {
+      if (loadingStates.contentIsLoading) {
+        clearInterval(j);
+        dataPreloader();
+      }
+    }, 0);
+  }
 
   function viewPage() {
     if (n === 1) {
-      if (homeSection.classList.contains("hidden--js"))
+      if (homeSection.classList.contains("hidden--js")) {
         homeSection.classList.remove("hidden--js");
-      if (!aboutSection.classList.contains("hidden--js"))
+      }
+      if (!aboutSection.classList.contains("hidden--js")) {
         aboutSection.classList.add("hidden--js");
+      }
     } else {
-      if (aboutSection.classList.contains("hidden--js"))
+      if (aboutSection.classList.contains("hidden--js")) {
         aboutSection.classList.remove("hidden--js");
-      if (!homeSection.classList.contains("hidden--js"))
+      }
+      if (!homeSection.classList.contains("hidden--js")) {
         homeSection.classList.add("hidden--js");
+      }
     }
   }
+
+  pageProgress();
 }
 
 function dataPreloader() {
   if (homeSection.classList.contains("hidden--js")) {
-    if (!content_home.classList.contains("hidden--js"))
+    if (!content_home.classList.contains("hidden--js")) {
       content_home.classList.add("hidden--js");
-    if (!aboutDataWrapper.classList.contains("hidden--js"))
+    }
+    if (!aboutDataWrapper.classList.contains("hidden--js")) {
       aboutDataWrapper.classList.add("hidden--js");
+    }
+
     content_about.classList.remove("hidden--js");
     about_preloader.classList.remove("hidden--js");
   } else {
-    if (!content_about.classList.contains("hidden--js"))
+    if (!content_about.classList.contains("hidden--js")) {
       content_about.classList.add("hidden--js");
-    if (!about_preloader.classList.contains("hidden--js"))
+    }
+    if (!about_preloader.classList.contains("hidden--js")) {
       about_preloader.classList.add("hidden--js");
+    }
+
     content_home.classList.remove("hidden--js");
     homeDataWrapper.innerHTML = "";
-    for (let i = 0; i < 4; i++)
+
+    for (let i = 0; i < 4; i++) {
       homeDataWrapper.innerHTML += `<li class="home-content-preloader-wrapper"><div class="wrapper--image-placeholder"><div class="image-placeholder"></div></div><div class="wrapper--content"><div class="content"></div><div class="content"></div><div class="content"></div></div></li>`;
+    }
   }
   loadingStates.contentIsLoaded = false;
 }
@@ -101,34 +94,17 @@ function removeDataPreloader() {
 }
 
 /**
- * @param {f} //function
+ *
+ * @param {Object} data
+ * @param {Function} f
  */
+
 function dataIsLoaded(data, f) {
   setTimeout(function () {
     removeDataPreloader();
     if (data instanceof Array) f(data);
     else f(data);
   }, 10000);
-}
-
-function runPreloader() {
-  if (loadingStates.pageIsLoaded) loadingStates.pageIsLoaded = false;
-  if (loadingStates.contentIsLoading) loadingStates.contentIsLoading = false;
-
-  let loaderCount = 0;
-
-  function load() {
-    if (loaderCount >= 50) loadingStates.pageIsLoaded = true;
-    if (loaderCount >= 99.5) {
-      loadingStates.contentIsLoading = true;
-      clearInterval(loading);
-      preloader.style.width = "0";
-    }
-    loaderCount += 0.5;
-    preloader.style.width = `${loaderCount}%`;
-  }
-  const loading = setInterval(load, 15);
-  hideAllPage();
 }
 
 // Hide all pages when a new page loads(animation loader)
@@ -141,6 +117,26 @@ function hideAllPage() {
     aboutSection.classList.add("hidden--js");
     content_about.classList.add("hidden--js");
   }
+}
+
+function runPreloader() {
+  if (loadingStates.pageIsLoaded) loadingStates.pageIsLoaded = false;
+  if (loadingStates.contentIsLoading) loadingStates.contentIsLoading = false;
+
+  let loaderCount = 0;
+
+  function load() {
+    if (loaderCount == 50) loadingStates.pageIsLoaded = true;
+    if (loaderCount == 99.5) {
+      loadingStates.contentIsLoading = true;
+      clearInterval(loading);
+      preloader.style.width = "0";
+    }
+    loaderCount += 0.5;
+    preloader.style.width = `${loaderCount}%`;
+  }
+  const loading = setInterval(load, 15);
+  hideAllPage();
 }
 
 function loadOnScroll(data) {
@@ -309,3 +305,20 @@ function dataInfo(country) {
     });
   }
 }
+
+function loadDocument() {
+  if (!observerState.observe) observerState.observe = true;
+  runPreloader();
+  loadPage(1);
+  dataIsLoaded(DATA, loadOnScroll);
+}
+
+(function () {
+  const i = setInterval(function () {
+    // Check if data is cached and load the data to the page
+    if (DATA) {
+      clearInterval(i);
+      loadDocument();
+    }
+  }, 0);
+})();
