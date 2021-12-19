@@ -35,8 +35,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL:
-- Live Site URL:
+- Solution URL: https://github.com/nuel1/Country-searcher
+- Live Site URL: https://zen-brown-c927a1.netlify.app
 
 ## My process
 
